@@ -1,0 +1,9 @@
+# paper jar
+paper*
+
+logs/
+cache/
+libraries/
+versions/
+
+plugins/.paper-remapped
