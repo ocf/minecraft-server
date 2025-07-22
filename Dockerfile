@@ -22,7 +22,7 @@ RUN apt-get update \
 
 WORKDIR /minecraft
 COPY start.sh eula.txt server.properties ops.json /minecraft/
-COPY ./plugins/ /minecraft/plugins
+COPY plugins/ /minecraft/plugins/
 RUN curl -sSL "https://fill-data.papermc.io/v1/objects/e72a1c23c38683c32d8affa5c499c21e21524acb9bbeb38bdff8d8b6296f7d08/paper-1.21.8-10.jar" -o paper.jar
 
 RUN ln -s /data/world world \
