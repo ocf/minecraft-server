@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from transpire.resources import Deployment, Ingress, Secret, Service
+from transpire.resources import Deployment, Ingress, Secret, Service, PersistentVolumeClaim
 from transpire.types import Image, ContainerRegistry
 from transpire.utils import get_image_tag
 
@@ -47,6 +47,14 @@ def objects():
         path_prefix="/",
     )
 
+    pvc = PersistentVolumeClaim(
+        name="ocfmc-1.21.8",
+        storage_class_name="rbd-nvme",
+        access_modes=["ReadWriteOnce"],
+        storage="32Gi"
+    )
+
     yield dep.build()
     yield svc.build()
     yield ing.build()
+    yield pvc.build()
