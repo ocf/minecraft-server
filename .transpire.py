@@ -44,6 +44,7 @@ def objects():
 
     svc_built = svc.build()
 
+    svc_built["spec"]["type"] = "LoadBalancer"
     svc_built["status"] = { "loadBalancer": { "ingress": [{"ip": "169.229.226.85", "ipMode": "VIP"}] } }
 
     pvc = PersistentVolumeClaim(
