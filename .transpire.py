@@ -25,7 +25,7 @@ def add_volumes(dep):
 def objects():
     dep = Deployment(
         name="ocfmc-1.21.8",
-        image=get_image_tag(name),
+        image=get_image_tag("ocfmc-1.21.8"),
         ports=[25565],
     )
 
