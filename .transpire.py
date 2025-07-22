@@ -42,11 +42,9 @@ def objects():
         port_on_svc=25565,
     )
 
-    ing = Ingress.from_svc(
-        svc=svc,
-        host="mc.ocf.berkeley.edu",
-        path_prefix="/",
-    )
+    svc_built = svc.build()
+
+    svc_built["status"] = { "loadBalancer": { "ingress": [{"ip": "169.229.226.85", "ipMode": "vip"}] } }
 
     pvc = PersistentVolumeClaim(
         name=dep_name,
@@ -56,6 +54,5 @@ def objects():
     )
 
     yield dep.build()
-    yield svc.build()
-    yield ing.build()
+    yield svc_built
     yield pvc.build()
