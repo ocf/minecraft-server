@@ -5,16 +5,17 @@ from transpire.types import Image, ContainerRegistry
 from transpire.utils import get_image_tag
 
 name = "minecraft-server"
+dep_name = "ocfmc-1-21-8"
 auto_sync = True
 
 
 def images():
-    yield Image(name="ocfmc-1.21.8", path=Path("/"), registry=ContainerRegistry("ghcr"))
+    yield Image(name=dep_name, path=Path("/"), registry=ContainerRegistry("ghcr"))
 
 
 def add_volumes(dep):
     dep.obj.spec.template.spec.volumes = [
-        {"name": "data", "persistentVolumeClaim": {"claimName": "ocfmc-1.21.8"}},
+        {"name": "data", "persistentVolumeClaim": {"claimName": dep_name}},
     ]
 
     dep.obj.spec.template.spec.containers[0].volume_mounts = [
@@ -24,8 +25,8 @@ def add_volumes(dep):
 
 def objects():
     dep = Deployment(
-        name="ocfmc-1.21.8",
-        image=get_image_tag("ocfmc-1.21.8"),
+        name=dep_name,
+        image=get_image_tag(dep_name),
         ports=[25565],
     )
 
@@ -35,7 +36,7 @@ def objects():
     add_volumes(dep)
 
     svc = Service(
-        name="ocfmc-1.21.8",
+        name=dep_name,
         selector=dep.get_selector(),
         port_on_pod=25565,
         port_on_svc=25565,
@@ -48,7 +49,7 @@ def objects():
     )
 
     pvc = PersistentVolumeClaim(
-        name="ocfmc-1.21.8",
+        name=dep_name,
         storage_class_name="rbd-nvme",
         access_modes=["ReadWriteOnce"],
         storage="32Gi"
