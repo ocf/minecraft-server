@@ -1,9 +1,9 @@
 # paper jar
 paper*
 
-logs/
-cache/
-libraries/
-versions/
+ocfmc-1-21-8/logs/
+ocfmc-1-21-8/cache/
+ocfmc-1-21-8/libraries/
+ocfmc-1-21-8/versions/
 
-plugins/.paper-remapped
+ocfmc-1-21-8/plugins/.paper-remapped
