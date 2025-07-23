@@ -7,3 +7,6 @@ ocfmc-1-21-8/libraries/
 ocfmc-1-21-8/versions/
 
 ocfmc-1-21-8/plugins/.paper-remapped
+
+__pycache__/
+.idea/
