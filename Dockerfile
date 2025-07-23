@@ -1,9 +1,10 @@
-FROM theocf/debian:bookworm
+FROM theocf/debian:bookworm as base
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         wget \
         apt-transport-https \
+        unzip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -20,18 +21,34 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+EXPOSE 25565
 WORKDIR /minecraft
-COPY start.sh eula.txt server.properties ops.json /minecraft/
-COPY plugins/ /minecraft/plugins/
-RUN curl -sSL "https://fill-data.papermc.io/v1/objects/e72a1c23c38683c32d8affa5c499c21e21524acb9bbeb38bdff8d8b6296f7d08/paper-1.21.8-10.jar" -o paper.jar
+CMD ["./start.sh"]
+
+FROM base as ocfmc-1-21-8
+
+COPY ocfmc-1-21-8/* eula.txt /minecraft/
+ADD https://fill-data.papermc.io/v1/objects/e72a1c23c38683c32d8affa5c499c21e21524acb9bbeb38bdff8d8b6296f7d08/paper-1.21.8-10.jar paper.jar
 
 RUN ln -s /data/world world \
     && ln -s /data/world_nether world_nether \
     && ln -s /data/world_the_end world_the_end \
     && ln -s /data/banned-ips.json banned-ips.json \
     && ln -s /data/banned-players.json banned-players.json \
-    && ln -s /data/whitelist.json whitelist.json
+    && ln -s /data/whitelist.json whitelist.json \
+    && ln -s /data/usercache.json usercache.json
 
+FROM base as gtnh
 
-EXPOSE 25565
-CMD ["./start.sh"]
+ADD https://downloads.gtnewhorizons.com/ServerPacks/GT_New_Horizons_2.7.4_Server_Java_17-21.zip gtnh.zip
+
+RUN ln -s /data/World World \
+    && ln -s /data/backups backups \
+    && ln -s /data/banned-ips.json banned-ips.json \
+    && ln -s /data/banned-players.json banned-players.json \
+    && ln -s /data/whitelist.json whitelist.json \
+    && ln -s /data/usercache.json usercache.json
+
+COPY gtnh/* eula.txt /minecraft/
+
+RUN unzip -n gtnh.zip
